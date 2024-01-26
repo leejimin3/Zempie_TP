@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-//#include "Struct_Animal.h"
 #include "Parent_Animal.generated.h"
 
 UCLASS()
@@ -30,4 +29,20 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
 	TArray<int32> tail;
+
+	UPROPERTY(EditAnywhere)
+	FVector LeftDownFarmAria;
+
+	UFUNCTION()
+	void Set_LeftDownFarmAria(FVector _leftdownfarmaria);
+
+	UPROPERTY(EditAnywhere)
+	FVector RightUpFarmAria;
+
+	UFUNCTION()
+	void Set_RightUpFarmAria(FVector _rightupfarmaria);
+
+	UPROPERTY(EditAnywhere)
+	FVector RandomFarmAria;
+
 };
