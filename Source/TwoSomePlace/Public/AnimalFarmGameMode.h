@@ -31,10 +31,10 @@ public:
 	UClass* AnimalClass;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	FVector FarmLeftTop;
+	FVector FarmLeftDown;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	FVector FarmRightTop;
+	FVector FarmRightUp;
 
 	UFUNCTION(BlueprintCallable, Category = "Spawn")
 	void SpawnAnimals(int animalSpawnCount);

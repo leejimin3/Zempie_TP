@@ -21,6 +21,11 @@ void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
 	{
 		AParent_Animal* animal = GetWorld()->SpawnActor<AParent_Animal>(AnimalClass, SpawnOrigin, { 0.0f,0.0f,0.0f });
 		Animals.Push(animal);
+
+		/*
+			animal->Set_LeftDownFarmAria(FarmLeftDown);
+			animal->Set_RightUpFarmAria(FarmRightUp);
+		*/
 	}
 
 	// lower player
@@ -28,5 +33,9 @@ void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
 	{
 		AParent_Animal* animal = GetWorld()->SpawnActor<AParent_Animal>(AnimalClass, SpawnOrigin, { 0.0f,0.0f,0.0f });
 		Animals.Push(animal);
+		/*
+			animal->Set_LeftDownFarmAria(FarmLeftDown);
+			animal->Set_RightUpFarmAria(FarmRightUp);
+		*/
 	}
 }
