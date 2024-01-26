@@ -2,6 +2,9 @@
 
 
 #include "AnimalFarmGameMode.h"
+#include "../Parent_Animal.h"
+
+#include "Kismet/KismetMathLibrary.h"
 
 void AAnimalFarmGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
@@ -11,10 +14,19 @@ void AAnimalFarmGameMode::InitGame(const FString& MapName, const FString& Option
 
 void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
 {
-	FTransform animalDefaultTransform;
-	animalDefaultTransform.SetScale3D({ 1.0f,1.0f,1.0f });
+	check(GetWorld() != nullptr);
 
-	FVector animalSpawnWorldLocation = MapCenterWorldLocation;
-	animalSpawnWorldLocation.Y -= AnimalSpawnYDistance * animalSpawnCount;
+	// upper player		
+	for (int i = 0; i < animalSpawnCount; ++i)
+	{
+		AParent_Animal* animal = GetWorld()->SpawnActor<AParent_Animal>(AnimalClass, SpawnOrigin, { 0.0f,0.0f,0.0f });
+		Animals.Push(animal);
+	}
 
+	// lower player
+	for (int i = 0; i < animalSpawnCount; ++i)
+	{
+		AParent_Animal* animal = GetWorld()->SpawnActor<AParent_Animal>(AnimalClass, SpawnOrigin, { 0.0f,0.0f,0.0f });
+		Animals.Push(animal);
+	}
 }

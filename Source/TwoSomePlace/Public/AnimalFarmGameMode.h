@@ -7,9 +7,12 @@
 #include "GameFramework/GameMode.h"
 #include "AnimalFarmGameMode.generated.h"
 
+
 /**
  * 
  */
+class AParent_Animal;
+
 UCLASS()
 class TWOSOMEPLACE_API AAnimalFarmGameMode : public AGameMode
 {
@@ -22,23 +25,19 @@ public:
 public:
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	FVector MapCenterWorldLocation;
+	FVector SpawnOrigin;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	float FarmSize = 512.0f;
+	UClass* AnimalClass;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	float AnimalSpawnYDistance = 0.0f;
+	FVector FarmLeftTop;
 
-	UFUNCTION(BlueprintCallable, Category = "Animal")
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	FVector FarmRightTop;
+
+	UFUNCTION(BlueprintCallable, Category = "Spawn")
 	void SpawnAnimals(int animalSpawnCount);
 
-private:
-
-	UPROPERTY()
-	TArray<AActor*> UpperPlayerAnimals;
-
-	UPROPERTY()
-	TArray<AActor*> LowerPlayerAnimals;
-
+	TArray<AParent_Animal*> Animals;
 };
