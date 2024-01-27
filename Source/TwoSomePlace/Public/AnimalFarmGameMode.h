@@ -7,11 +7,41 @@
 #include "GameFramework/GameMode.h"
 #include "AnimalFarmGameMode.generated.h"
 
+/*
+	csv 포맷과 맞춘 구조체 형태입니다.
+*/
+USTRUCT(BlueprintType)
+struct TWOSOMEPLACE_API FAnimalRawData : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	FAnimalRawData() {}
+	FAnimalRawData(const FAnimalRawData& rawData)
+		:AnimalCode(rawData.AnimalCode), AnimalName(rawData.AnimalName)
+	{
+		for (const float& state : rawData.States)
+		{
+			this->States.Push(state);
+		}
+	}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	FString AnimalCode;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	FString AnimalName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> States;
+};
 
 /**
  * 
  */
 class AParent_Animal;
+class AChild_Animal;
 
 UCLASS()
 class TWOSOMEPLACE_API AAnimalFarmGameMode : public AGameMode
@@ -23,6 +53,26 @@ public:
 	UFUNCTION()
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 public:
+
+	/*
+		csv파일 포맷의 Row 갯수로
+		csv파일에 이상이 있는지 검사하는데 사용합니다.
+	*/
+	UPROPERTY(EditAnywhere, Category = "AnimalState | CSV Data")
+	int AnimalDataCSVRowCount = 14;
+
+	/*
+		*.csv 형태의 파일 이름을 입력하며, /confing 폴더에 위치합니다.
+	*/
+	UPROPERTY(EditAnywhere, Category = "AnimalState | CSV Data")
+	FString AnimalDataCSVFileName;
+
+	/*
+		AnimalDataCSVFileName에 해당하는 CSV파일에서 읽어온 데이터를
+		반환합니다.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "AnimalState")
+	TArray<FAnimalRawData> GetAnimalRawDatas();
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	FVector SpawnOrigin;
@@ -36,8 +86,25 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	FVector FarmRightUp;
 
+	/*
+		animalSpawnCount만큼 동물을 생성합니다.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "Spawn")
 	void SpawnAnimals(int animalSpawnCount);
 
+	/*
+		parent1과 parent2의 특성을 섞은 child animal을 생성합니다.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "InGame")
+	AChild_Animal* MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2);
+
+protected:
+
+	UPROPERTY(BlueprintReadWrite, Category = "Animal")
 	TArray<AParent_Animal*> Animals;
+
+	UPROPERTY();
+	TArray<FAnimalRawData> AnimalDatas;
+
+	void LoadAnimalDatas();
 };
