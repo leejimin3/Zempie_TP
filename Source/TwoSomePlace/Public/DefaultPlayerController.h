@@ -21,6 +21,8 @@ public:
 	AActor* ClickActor;
 	AActor* ClickActor2;
 
+	FTimerHandle Fusiontimerhandle;
+
 	void HandleClick();
 	void Init();
 	
@@ -34,6 +36,8 @@ public:
 
 	bool bcanclick;
 	void SetClick();
+
+	void Fusion();
 
 	AMainCamera* maincamera;
 

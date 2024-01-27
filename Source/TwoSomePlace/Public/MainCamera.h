@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/Controller.h"
 #include "MainCamera.generated.h"
 
 UCLASS()
@@ -32,6 +33,14 @@ public:
 
 	UFUNCTION()
 	void MovingCamera();
+
+	UFUNCTION(BlueprintCallable)
+	void FadeOutCamera(APlayerController* playercontroller);
+
+	UFUNCTION(BlueprintCallable)
+	void FadeInCamera(APlayerController* playercontroller);
+
+	FTimerHandle FadeTImerHandle;
 
 	UPROPERTY(EditAnyWhere)
 	bool bMoving;

@@ -2,6 +2,8 @@
 
 
 #include "MainCamera.h"
+#include "GameFramework/Controller.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMainCamera::AMainCamera()
@@ -11,7 +13,6 @@ AMainCamera::AMainCamera()
 
 	MainCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCameraComponent"));
 	SetRootComponent(MainCameraComponent);
-
 }
 
 // Called when the game starts or when spawned
@@ -46,4 +47,16 @@ void AMainCamera::MovingCamera()
     {
         bMoving = false;
     }
+}
+
+void AMainCamera::FadeInCamera(APlayerController* playercontroller)
+{
+    APlayerCameraManager* cameramanager =  playercontroller->PlayerCameraManager;
+    cameramanager->StartCameraFade(0.f, 1.f, 3.f, FLinearColor::Black, false, true);
+}
+
+void AMainCamera::FadeOutCamera(APlayerController* playercontroller)
+{
+    APlayerCameraManager* cameramanager = playercontroller->PlayerCameraManager;
+    cameramanager->StartCameraFade(1.f, 0.f, 3.f, FLinearColor::Black, false, true);
 }
