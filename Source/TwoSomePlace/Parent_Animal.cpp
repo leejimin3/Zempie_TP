@@ -24,14 +24,19 @@ void AParent_Animal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    if (FVector::Distance(GetActorLocation(), RandomFarmAria) > 100.0f)
+    if (FVector::Distance(GetActorLocation(), RandomFarmAria) > 100.0f && !barrive)
     {
         float MoveSpeed = FVector::Distance(GetActorLocation(), RandomFarmAria) / 2.0f;
 
         FVector MoveDirection = (RandomFarmAria - GetActorLocation()).GetSafeNormal();
 
-        FVector NewLocation = GetActorLocation() + (MoveDirection * MoveSpeed * DeltaTime);
+        FVector NewLocation = GetActorLocation() + (MoveDirection * MoveSpeed * DeltaTime * 3.f);
         SetActorLocation(NewLocation);
+    }
+
+    else
+    {
+        barrive = true;
     }
 }
 
