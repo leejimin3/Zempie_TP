@@ -8,7 +8,7 @@ public class TwoSomePlace : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "CinematicCamera", "Paper2D" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "CinematicCamera", "Paper2D", "UMG"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
