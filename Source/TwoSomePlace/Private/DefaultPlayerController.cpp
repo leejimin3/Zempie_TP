@@ -3,6 +3,7 @@
 
 #include "DefaultPlayerController.h"
 #include "GameFramework/Actor.h"
+#include "Blueprint/UserWidget.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Misc/DefaultValueHelper.h"
 
@@ -31,6 +32,15 @@ void ADefaultPlayerController::BeginPlay()
 
     Init();
     SetShowMouseCursor(true);
+
+    for (int i = 0; i < widgets.Num(); i++)
+    {
+        UUserWidget* tmp = CreateWidget<UUserWidget>(GetWorld(), widgets[i]);
+        WidgetInstance.Add(tmp);
+    }
+
+    WidgetInstance[0]->AddToViewport();
+    WidgetInstance[1]->AddToViewport();
 
     FTimerHandle timerhandle;
     GetWorldTimerManager().SetTimer(timerhandle, this, &ADefaultPlayerController::SetClick, 2.0f, false);
@@ -90,8 +100,14 @@ void ADefaultPlayerController::HandleClick()
                         2 -> leg
                         3 -> tail
                     */
+                    WidgetInstance[0]->RemoveFromViewport();
+                    WidgetInstance[0]->RemoveFromParent();
+                    WidgetInstance[1]->RemoveFromViewport();
+                    WidgetInstance[1]->RemoveFromParent();
+
                     maincamera->bMoving = true;
                     FadeIn();
+
                     bcanclick = false;
                     GetWorldTimerManager().SetTimer(Fusiontimerhandle, this, &ADefaultPlayerController::Fusion, 0.016f, true);
                     break;
@@ -132,8 +148,9 @@ void ADefaultPlayerController::ResultFlow()
     FTimerHandle thirdhanle;
     GetWorldTimerManager().SetTimer(thirdhanle, [this]()
         {
-            FadeOut();
-            maincamera->SetActorLocation(FVector(60000.f, 6500.f, -60.f));
+            WidgetInstance[4]->AddToViewport();
+            //FadeOut();
+            ///maincamera->SetActorLocation(FVector(60000.f, 6500.f, -60.f));
         }, 10.f, false);
 }
 

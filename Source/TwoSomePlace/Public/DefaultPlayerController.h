@@ -45,6 +45,12 @@ public:
 
 	AMainCamera* maincamera;
 
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UUserWidget>> widgets;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UUserWidget*> WidgetInstance;
+	
 protected:
 	virtual void BeginPlay() override;
 };
