@@ -6,12 +6,19 @@
 #include "../Child_Animal.h"
 
 #include "Kismet/KismetMathLibrary.h"
-
+#include "Kismet/KismetSystemLibrary.h"
+#include "Misc/DefaultValueHelper.h"
 
 void AAnimalFarmGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
-	//Spawn animals
+	
+	LoadAnimalDatas();
+}
+
+TArray<FAnimalRawData> AAnimalFarmGameMode::GetAnimalRawDatas()
+{
+	return AnimalDatas;
 }
 
 void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
@@ -81,5 +88,65 @@ AChild_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* parent
 
 void AAnimalFarmGameMode::LoadAnimalDatas()
 {
+	FString csvRawData;
 	
+	const TCHAR* delims = {TEXT(",")};
+	if (FFileHelper::LoadFileToString(csvRawData, *(FPaths::ProjectConfigDir() + AnimalDataCSVFileName)))
+	{
+		TArray<FString> columns;
+		csvRawData.ParseIntoArrayLines(columns);
+
+		for (const FString& column : columns)
+		{
+			if (column[0] != 'a')
+			{
+				continue;
+			}
+			else
+			{
+				int32 arraySize = 0;
+				TArray<FString> rows;
+				
+				if ((arraySize = column.ParseIntoArray(rows, delims)) > 0)
+				{
+					FAnimalRawData animalRawData;
+					animalRawData.AnimalCode = rows[0];
+					animalRawData.AnimalName = rows[1];
+
+					for (int i = 2; i < arraySize; ++i)
+					{
+						float data = 0.0f;
+						
+						check(FDefaultValueHelper::ParseFloat(rows[i], data));
+						
+						animalRawData.States.Push(data);
+					}
+
+					
+
+					AnimalDatas.Push(animalRawData);
+				}
+			}
+		}
+
+	}
+	else
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), *(AnimalDataCSVFileName + TEXT(" file not found, check config folder")));
+		UKismetSystemLibrary::PrintString(GetWorld(), *(FPaths::ProjectConfigDir() + AnimalDataCSVFileName));
+
+		return;
+	}
+
+	//// debugging Code
+	for (const FAnimalRawData& rawData : AnimalDatas)
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), rawData.AnimalCode);
+		UKismetSystemLibrary::PrintString(GetWorld(), rawData.AnimalName);
+
+		for (const float& state : rawData.States)
+		{
+			UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("%f"), state));
+		}
+	}
 }
