@@ -14,6 +14,7 @@ void AAnimalFarmGameMode::InitGame(const FString& MapName, const FString& Option
 	Super::InitGame(MapName, Options, ErrorMessage);
 	
 	LoadAnimalDatas();
+	LoadAnimalImageDatas(TEXT("ImageDataTest.csv"));
 }
 
 TArray<FAnimalRawData> AAnimalFarmGameMode::GetAnimalRawDatas()
@@ -123,12 +124,17 @@ AParent_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* paren
 	return childAnimal;
 }
 
+FAnimalImageData AAnimalFarmGameMode::GetAnimalImageData(FString animalCode)
+{
+	return AnimalImageDatas[animalCode];
+}
+
 void AAnimalFarmGameMode::LoadAnimalDatas()
 {
 	FString csvRawData;
 	
 	const TCHAR* delims = {TEXT(",")};
-	if (FFileHelper::LoadFileToString(csvRawData, *(FPaths::ProjectConfigDir() + AnimalDataCSVFileName)))
+	if (FFileHelper::LoadFileToString(csvRawData, *(FPaths::ProjectDir() + AnimalDataCSVFileName)))
 	{
 		TArray<FString> columns;
 		csvRawData.ParseIntoArrayLines(columns);
@@ -186,4 +192,66 @@ void AAnimalFarmGameMode::LoadAnimalDatas()
 			UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("%f"), state));
 		}
 	}*/
+}
+
+void AAnimalFarmGameMode::LoadAnimalImageDatas(FString fileName)
+{
+	const TArray<FString> partsNames = { TEXT("Body"), TEXT("Head") , TEXT("Leg") , TEXT("Tail") };
+	const TCHAR* delims = { TEXT(",")};
+	FString animalImageRawDatas;
+	if (FFileHelper::LoadFileToString(animalImageRawDatas, *(FPaths::ProjectDir() + fileName)))
+	{
+		TArray<FString> columns;
+		int32 columnNum;
+		columnNum = animalImageRawDatas.ParseIntoArrayLines(columns) - 1; // 첫 행 제외
+
+		// code별로 구분 ImagePartsNum 만큼 잘라서 계산
+		for (int i = 0; i < (columnNum / ImagePartsNum); ++i)
+		{
+			FAnimalImageData animationImageData;
+			animationImageData.AnimalCode = columns[i * ImagePartsNum + 1].Left(4);
+
+			for (int j = 0; j < ImagePartsNum; ++j)
+			{
+											// 첫 행 제외
+				FString rawRows = columns[j + i * ImagePartsNum + 1];
+
+				TArray<FString> rows;
+				rawRows.ParseIntoArray(rows, delims);
+				animationImageData.TextureNames.Add(partsNames[j], rows[0]);
+
+				// 2d 좌표 데이터
+				// Code 값이기 때문에 첫 행은 제외합니다.
+				FVector2Ds vectors;
+				for (int k = 1; k < rows.Num(); k+=2)
+				{
+					double x, y;
+					FDefaultValueHelper::ParseDouble(rows[k], x);
+					FDefaultValueHelper::ParseDouble(rows[k + 1], y);
+
+					vectors.Vector2Ds.Push(FVector2D(x, y));
+				}
+
+				animationImageData.ImageVector2DDatas.Add(partsNames[j], vectors);
+				AnimalImageDatas.Add(animationImageData.AnimalCode, animationImageData);
+			}
+		}
+
+		for (auto&[key, val] : AnimalImageDatas)
+		{
+			UKismetSystemLibrary::PrintString(GetWorld(), key);
+			for (auto& [_key, _val] : val.ImageVector2DDatas)
+			{
+				UKismetSystemLibrary::PrintString(GetWorld(), _key);
+				for (auto& __val : _val.Vector2Ds)
+				{
+					UKismetSystemLibrary::PrintString(GetWorld(), __val.ToString());
+				}
+			}
+		}
+	}
+	else
+	{
+		UKismetSystemLibrary::PrintString(GetWorld(), *(FPaths::ProjectConfigDir() + fileName));
+	}
 }
