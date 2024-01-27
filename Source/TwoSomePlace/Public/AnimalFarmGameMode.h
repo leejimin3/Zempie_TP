@@ -67,6 +67,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "AnimalState | CSV Data")
 	FString AnimalDataCSVFileName;
 
+	/*
+		AnimalDataCSVFileName에 해당하는 CSV파일에서 읽어온 데이터를
+		반환합니다.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "AnimalState")
 	TArray<FAnimalRawData> GetAnimalRawDatas();
 
@@ -82,9 +86,15 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	FVector FarmRightUp;
 
+	/*
+		animalSpawnCount만큼 동물을 생성합니다.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "Spawn")
 	void SpawnAnimals(int animalSpawnCount);
 
+	/*
+		parent1과 parent2의 특성을 섞은 child animal을 생성합니다.
+	*/
 	UFUNCTION(BlueprintCallable, Category = "InGame")
 	AChild_Animal* MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2);
 
