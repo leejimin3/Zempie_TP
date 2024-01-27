@@ -139,7 +139,7 @@ void AAnimalFarmGameMode::LoadAnimalDatas()
 	}
 
 	//// debugging Code
-	for (const FAnimalRawData& rawData : AnimalDatas)
+	/*for (const FAnimalRawData& rawData : AnimalDatas)
 	{
 		UKismetSystemLibrary::PrintString(GetWorld(), rawData.AnimalCode);
 		UKismetSystemLibrary::PrintString(GetWorld(), rawData.AnimalName);
@@ -148,5 +148,5 @@ void AAnimalFarmGameMode::LoadAnimalDatas()
 		{
 			UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("%f"), state));
 		}
-	}
+	}*/
 }
