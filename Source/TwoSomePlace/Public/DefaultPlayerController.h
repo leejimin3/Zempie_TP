@@ -38,6 +38,10 @@ public:
 	void SetClick();
 
 	void Fusion();
+	void ResultFlow();
+
+	void FadeIn();
+	void FadeOut();
 
 	AMainCamera* maincamera;
 

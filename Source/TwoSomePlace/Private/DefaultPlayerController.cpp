@@ -91,7 +91,7 @@ void ADefaultPlayerController::HandleClick()
                         3 -> tail
                     */
                     maincamera->bMoving = true;
-                    maincamera->FadeInCamera(this);
+                    FadeIn();
                     bcanclick = false;
                     GetWorldTimerManager().SetTimer(Fusiontimerhandle, this, &ADefaultPlayerController::Fusion, 0.016f, true);
                     break;
@@ -110,10 +110,45 @@ void ADefaultPlayerController::Fusion()
     newlocation = ClickActor2->GetActorLocation() + ClickActor2->GetActorForwardVector() * -1.5f;
     ClickActor2->SetActorLocation(newlocation);
 
-    if (FVector::Distance(ClickActor->GetActorLocation(), ClickActor2->GetActorLocation()) < 100.f) FTimerManager().ClearTimer(Fusiontimerhandle);
+    if (FVector::Distance(ClickActor->GetActorLocation(), ClickActor2->GetActorLocation()) < 100.f)
+    {
+        FTimerManager().ClearTimer(Fusiontimerhandle);
+        ResultFlow();
+    }
+}
+
+void ADefaultPlayerController::ResultFlow()
+{
+    FTimerHandle firsthanle;
+    GetWorldTimerManager().SetTimer(firsthanle, [this]()
+        {
+            FadeOut();
+            maincamera->SetActorLocation(FVector(30000.f, 3575.f, -60.f));
+        }, 0.1f, false);
+
+    FTimerHandle secondhanle;
+    GetWorldTimerManager().SetTimer(secondhanle, this, &ADefaultPlayerController::FadeIn, 4.f, false);
+
+    FTimerHandle thirdhanle;
+    GetWorldTimerManager().SetTimer(thirdhanle, [this]()
+        {
+            FadeOut();
+            maincamera->SetActorLocation(FVector(60000.f, 3575.f, -60.f));
+        }, 10.f, false);
 }
 
 void ADefaultPlayerController::SetClick()
 {
     bcanclick = true;
+}
+
+void ADefaultPlayerController::FadeIn()
+{
+    maincamera->FadeInCamera(this);
+}
+
+
+void ADefaultPlayerController::FadeOut()
+{
+    maincamera->FadeOutCamera(this);
 }
