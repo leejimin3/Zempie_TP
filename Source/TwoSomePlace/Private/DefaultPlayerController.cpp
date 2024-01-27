@@ -2,12 +2,11 @@
 
 
 #include "DefaultPlayerController.h"
+#include "AnimalFarmGameMode.h"
 #include "GameFramework/Actor.h"
 
 void ADefaultPlayerController::Init()
 {
-    FirstPos = FVector(-200.000016f, 310.000000f, -300.f);
-    SecondPos = FVector(200.000016f, 310.000000f, -300.f);
     state = 0;
 }
 
@@ -50,24 +49,20 @@ void ADefaultPlayerController::HandleClick()
                 {
                 case 0:
                     ClickActor->SetActorLocation(FirstPos);
+                    ClickActor->Tags.Remove("Animal");
                     //GetWorld()->GetAuthGameMode()->//캐스팅
                     state++;
                     break;
                 case 1:
                     ClickActor->SetActorLocation(SecondPos);
+                    TagName = "";
                     //GetWorld()->GetAuthGameMode()->//캐스팅
                     bcanclick = false;
-                    ShowResult();
                     break;
                 }
             }
         }
     }
-}
-
-void ADefaultPlayerController::ShowResult()
-{
-
 }
 
 void ADefaultPlayerController::SetClick()

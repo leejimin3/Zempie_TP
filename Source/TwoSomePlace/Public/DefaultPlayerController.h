@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "MainCamera.h"
 #include "DefaultPlayerController.generated.h"
 
 /**
@@ -21,8 +22,11 @@ public:
 
 	void HandleClick();
 	void Init();
-
+	
+	UPROPERTY(EditAnywhere)
 	FVector FirstPos;
+
+	UPROPERTY(EditAnywhere)
 	FVector SecondPos;
 
 	int state;
@@ -30,7 +34,7 @@ public:
 	bool bcanclick;
 	void SetClick();
 
-	void ShowResult();
+	AMainCamera* maincamera;
 
 protected:
 	virtual void BeginPlay() override;
