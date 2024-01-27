@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "MainCamera.h"
 #include "DefaultPlayerController.generated.h"
 
 /**
@@ -20,10 +21,15 @@ public:
 	AActor* ClickActor;
 	AActor* ClickActor2;
 
+	FTimerHandle Fusiontimerhandle;
+
 	void HandleClick();
 	void Init();
-
+	
+	UPROPERTY(EditAnywhere)
 	FVector FirstPos;
+
+	UPROPERTY(EditAnywhere)
 	FVector SecondPos;
 
 	int state;
@@ -31,7 +37,13 @@ public:
 	bool bcanclick;
 	void SetClick();
 
-	void ShowResult();
+	void Fusion();
+	void ResultFlow();
+
+	void FadeIn();
+	void FadeOut();
+
+	AMainCamera* maincamera;
 
 protected:
 	virtual void BeginPlay() override;

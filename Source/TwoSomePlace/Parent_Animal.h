@@ -48,7 +48,5 @@ public:
 	UPROPERTY(EditAnywhere)
 	FVector RandomFarmAria;
 
-
-
 	bool barrive;
 };
