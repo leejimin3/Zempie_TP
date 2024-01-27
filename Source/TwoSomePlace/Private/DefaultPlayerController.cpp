@@ -104,10 +104,10 @@ void ADefaultPlayerController::HandleClick()
 
 void ADefaultPlayerController::Fusion()
 {
-    FVector newlocation = ClickActor->GetActorLocation() + ClickActor->GetActorForwardVector()* 1.5f;
+    FVector newlocation = ClickActor->GetActorLocation() + ClickActor->GetActorForwardVector()* 2.0f;
     ClickActor->SetActorLocation(newlocation);
 
-    newlocation = ClickActor2->GetActorLocation() + ClickActor2->GetActorForwardVector() * -1.5f;
+    newlocation = ClickActor2->GetActorLocation() + ClickActor2->GetActorForwardVector() * -2.0f;
     ClickActor2->SetActorLocation(newlocation);
 
     if (FVector::Distance(ClickActor->GetActorLocation(), ClickActor2->GetActorLocation()) < 100.f)
@@ -123,7 +123,7 @@ void ADefaultPlayerController::ResultFlow()
     GetWorldTimerManager().SetTimer(firsthanle, [this]()
         {
             FadeOut();
-            maincamera->SetActorLocation(FVector(30000.f, 3575.f, -60.f));
+            maincamera->SetActorLocation(FVector(30000.f, 6500.f, -60.f));
         }, 0.1f, false);
 
     FTimerHandle secondhanle;
@@ -133,7 +133,7 @@ void ADefaultPlayerController::ResultFlow()
     GetWorldTimerManager().SetTimer(thirdhanle, [this]()
         {
             FadeOut();
-            maincamera->SetActorLocation(FVector(60000.f, 3575.f, -60.f));
+            maincamera->SetActorLocation(FVector(60000.f, 6500.f, -60.f));
         }, 10.f, false);
 }
 
