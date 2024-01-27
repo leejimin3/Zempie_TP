@@ -23,36 +23,64 @@ TArray<FAnimalRawData> AAnimalFarmGameMode::GetAnimalRawDatas()
 
 void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
 {
+	if (!Animals.IsEmpty())
+	{
+		for (AParent_Animal* animal : Animals)
+		{
+			animal->Destroy();
+		}
+
+		Animals.Empty();
+	}
+
 	//check(GetWorld() != nullptr);
 
+	TArray<FAnimalRawData> animalDatas = AnimalDatas;
+
+	FTransform defaultTransform({0.0f,0.0f,0.0f}, SpawnOrigin);
 	// upper player		
 	for (int i = 0; i < animalSpawnCount; ++i)
 	{
-		AParent_Animal* animal = GetWorld()->SpawnActor<AParent_Animal>(AnimalClass, SpawnOrigin, { 0.0f,0.0f,0.0f });
-		Animals.Push(animal);
+		AParent_Animal* animal = GetWorld()->SpawnActorDeferred<AParent_Animal>(AnimalClass, defaultTransform);
+
+		int animalTypeIndex = UKismetMathLibrary::RandomIntegerInRange(0, animalDatas.Num() - 1);
+		
+		FAnimalRawData animalData = animalDatas[animalTypeIndex];
+		// 성능 안좋음 매번 크기 재설정
+		animalDatas.RemoveAt(animalTypeIndex);
+
+		for (int j = 0; j < 4; ++j)
+		{
+			animal->animalCodes.Push(animalData.AnimalCode);
+		}
+
+		animalData.CopyRange(animal->head, 0, 2);
+		animalData.CopyRange(animal->body, 3, 5);
+		animalData.CopyRange(animal->leg, 6, 8);
+		animalData.CopyRange(animal->tail, 9, 11);
 
 		animal->Set_LeftDownFarmAria(FarmLeftDown);
 		animal->Set_RightUpFarmAria(FarmRightUp);
-	}
 
-	// lower player
-	for (int i = 0; i < animalSpawnCount; ++i)
-	{
-		AParent_Animal* animal = GetWorld()->SpawnActor<AParent_Animal>(AnimalClass, SpawnOrigin, { 0.0f,0.0f,0.0f });
+		animal->FinishSpawning(defaultTransform);
+
 		Animals.Push(animal);
-
-		animal->Set_LeftDownFarmAria(FarmLeftDown);
-		animal->Set_RightUpFarmAria(FarmRightUp);
 	}
 }
 
-AChild_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2)
+AParent_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2)
 {
-	AChild_Animal* childAnimal = nullptr;
-	childAnimal = NewObject<AChild_Animal>();
+	AParent_Animal* childAnimal = nullptr;
+	childAnimal = NewObject<AParent_Animal>();
+	// 임시 코드
+	/*FTransform spawnTransform(FRotator(), SpawnOrigin);
+	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(AnimalClass, spawnTransform);
+	childAnimal->Set_LeftDownFarmAria(FarmLeftDown);
+	childAnimal->Set_RightUpFarmAria(FarmRightUp);
+	childAnimal->FinishSpawning(spawnTransform);*/
 
 	// 반복문으로 일괄 처리하기 위한 처리
-	const TArray<int32>* parentsPartsInfo[4][2] =
+	const TArray<float>* parentsPartsInfo[4][2] =
 	{
 		{&parent1->head, &parent2->head},
 		{&parent1->body, &parent2->body},
@@ -60,7 +88,7 @@ AChild_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* parent
 		{&parent1->tail, &parent2->tail},
 	};
 
-	TArray<int32>* childPartsInfo[4] =
+	TArray<float>* childPartsInfo[4] =
 	{
 		&childAnimal->head,
 		&childAnimal->body,
@@ -72,14 +100,23 @@ AChild_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* parent
 	unsigned int selector = 0;
 	for (int i = 0; i < 4; ++i)
 	{
-		selector = UKismetMathLibrary::RandomInteger(1);
-		const TArray<int32>* selectedPartsInfo = parentsPartsInfo[i][selector];
+		selector = UKismetMathLibrary::RandomInteger(2);
+		const TArray<float>* selectedPartsInfo = parentsPartsInfo[i][selector];
 
 		childPartsInfo[i]->SetNum(selectedPartsInfo->Num());
 
 		for (int j = 0; j < selectedPartsInfo->Num(); ++j)
 		{
 			(*childPartsInfo[i])[j] = (*selectedPartsInfo)[j];
+		}
+		
+		if (selector == 0)
+		{
+			childAnimal->animalCodes.Push(parent1->animalCodes[i]);
+		}
+		else
+		{
+			childAnimal->animalCodes.Push(parent2->animalCodes[i]);
 		}
 	}
 

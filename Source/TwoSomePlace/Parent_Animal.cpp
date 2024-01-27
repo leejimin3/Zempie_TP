@@ -33,7 +33,6 @@ void AParent_Animal::Tick(float DeltaTime)
         FVector NewLocation = GetActorLocation() + (MoveDirection * MoveSpeed * DeltaTime * 3.f);
         SetActorLocation(NewLocation);
     }
-
     else
     {
         barrive = true;
