@@ -7,6 +7,35 @@
 #include "GameFramework/GameMode.h"
 #include "AnimalFarmGameMode.generated.h"
 
+USTRUCT(BlueprintType)
+struct TWOSOMEPLACE_API FVector2Ds
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FVector2D> Vector2Ds;
+};
+
+
+USTRUCT(BlueprintType)
+struct TWOSOMEPLACE_API FAnimalImageData : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	FString AnimalCode;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<FString> AnimalImageFileNames;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TMap<FString, FVector2Ds> ImageVector2DDatas;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TMap<FString,FString> TextureNames;
+};
+
 /*
 	csv 포맷과 맞춘 구조체 형태입니다.
 */
@@ -66,7 +95,7 @@ public:
 		csv파일 포맷의 Row 갯수로
 		csv파일에 이상이 있는지 검사하는데 사용합니다.
 	*/
-	UPROPERTY(EditAnywhere, Category = "AnimalState | CSV Data")
+	UPROPERTY(EditAnywhere, Category = "InGame")
 	int AnimalDataCSVRowCount = 14;
 
 	/*
@@ -113,6 +142,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "InGame")
 	FVector ParentRightPos;
 
+	UFUNCTION(BlueprintCallable, Category = "AnimalState | CSV Data")
+	FAnimalImageData GetAnimalImageData(FString animalCode);
+
 protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Animal")
@@ -122,6 +154,14 @@ protected:
 	TArray<FAnimalRawData> AnimalDatas;
 
 	void LoadAnimalDatas();
+
+	UPROPERTY(EditAnywhere, Category = "Animal Image")
+	int ImagePartsNum = 4;
+
+	UPROPERTY(VisibleAnywhere, Category = "Animal Image")
+	TMap<FString, FAnimalImageData> AnimalImageDatas;
+
+	void LoadAnimalImageDatas(FString fileName);
 
 	UPROPERTY(VisibleAnywhere, Category = "Animal");
 	AParent_Animal* ChildAnimal = nullptr;
