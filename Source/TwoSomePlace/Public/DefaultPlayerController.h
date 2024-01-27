@@ -1,0 +1,56 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/PlayerController.h"
+#include "MainCamera.h"
+#include "DefaultPlayerController.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class TWOSOMEPLACE_API ADefaultPlayerController : public APlayerController
+{
+	GENERATED_BODY()
+	
+public:
+	virtual void SetupInputComponent() override;
+
+	AActor* ClickActor;
+	AActor* ClickActor2;
+
+	FTimerHandle Fusiontimerhandle;
+
+	void HandleClick();
+	void Init();
+	
+	UPROPERTY(EditAnywhere)
+	FVector FirstPos;
+
+	UPROPERTY(EditAnywhere)
+	FVector SecondPos;
+
+	int state;
+
+	bool bcanclick;
+	void SetClick();
+
+	void Fusion();
+	void ResultFlow();
+
+	void FadeIn();
+	void FadeOut();
+
+	AMainCamera* maincamera;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UUserWidget>> widgets;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UUserWidget*> WidgetInstance;
+	
+protected:
+	virtual void BeginPlay() override;
+};

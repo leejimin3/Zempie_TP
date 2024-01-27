@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-//#include "Struct_Animal.h"
 #include "Parent_Animal.generated.h"
 
 UCLASS()
@@ -19,15 +18,35 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> head;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<FString> animalCodes;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> body;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> head;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> leg;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> body;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> tail;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> leg;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> tail;
+
+	UPROPERTY(EditAnywhere)
+	FVector LeftDownFarmAria;
+
+	UFUNCTION()
+	void Set_LeftDownFarmAria(FVector _leftdownfarmaria);
+
+	UPROPERTY(EditAnywhere)
+	FVector RightUpFarmAria;
+
+	UFUNCTION()
+	void Set_RightUpFarmAria(FVector _rightupfarmaria);
+
+	UPROPERTY(EditAnywhere)
+	FVector RandomFarmAria;
+
+	bool barrive;
 };
