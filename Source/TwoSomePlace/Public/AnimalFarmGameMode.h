@@ -35,6 +35,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
 	TArray<float> States;
+
+	void CopyRange(TArray<float>& outArray, const int startNum, int endNum)
+	{
+		for (int i = startNum; i <= endNum && i < States.Num(); ++i)
+		{
+			outArray.Push(States[i]);
+		}
+	}
 };
 
 /**
@@ -88,6 +96,7 @@ public:
 
 	/*
 		animalSpawnCount만큼 동물을 생성합니다.
+		이미 월드에 동물이 존재한다면, 동물을 모두 삭제한뒤 다시 생성합니다. (리롤)
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Spawn")
 	void SpawnAnimals(int animalSpawnCount);
@@ -96,15 +105,24 @@ public:
 		parent1과 parent2의 특성을 섞은 child animal을 생성합니다.
 	*/
 	UFUNCTION(BlueprintCallable, Category = "InGame")
-	AChild_Animal* MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2);
+	AParent_Animal* MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2);
+
+	UPROPERTY(EditAnywhere, Category = "InGame")
+	FVector ParentLeftPos;
+
+	UPROPERTY(EditAnywhere, Category = "InGame")
+	FVector ParentRightPos;
 
 protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Animal")
 	TArray<AParent_Animal*> Animals;
 
-	UPROPERTY();
+	UPROPERTY(VisibleAnywhere, Category = "Animal");
 	TArray<FAnimalRawData> AnimalDatas;
 
 	void LoadAnimalDatas();
+
+	UPROPERTY(VisibleAnywhere, Category = "Animal");
+	AParent_Animal* ChildAnimal = nullptr;
 };

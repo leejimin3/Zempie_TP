@@ -19,6 +19,7 @@ public:
 	virtual void SetupInputComponent() override;
 
 	AActor* ClickActor;
+	AActor* ClickActor2;
 
 	void HandleClick();
 	void Init();

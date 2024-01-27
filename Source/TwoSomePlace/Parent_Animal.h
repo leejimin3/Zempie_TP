@@ -18,17 +18,20 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> head;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<FString> animalCodes;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> body;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> head;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> leg;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> body;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AnimalState")
-	TArray<int32> tail;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> leg;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AnimalState")
+	TArray<float> tail;
 
 	UPROPERTY(EditAnywhere)
 	FVector LeftDownFarmAria;
