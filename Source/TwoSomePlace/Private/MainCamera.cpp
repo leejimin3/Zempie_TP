@@ -58,5 +58,5 @@ void AMainCamera::FadeInCamera(APlayerController* playercontroller)
 void AMainCamera::FadeOutCamera(APlayerController* playercontroller)
 {
     APlayerCameraManager* cameramanager = playercontroller->PlayerCameraManager;
-    cameramanager->StartCameraFade(1.2f, 0.f, 2.f, FLinearColor::Black, false, true);
+    cameramanager->StartCameraFade(1.2f, 0.f, 1.f, FLinearColor::Black, false, true);
 }

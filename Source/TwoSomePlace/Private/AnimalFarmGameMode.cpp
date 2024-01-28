@@ -74,7 +74,9 @@ AParent_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* paren
 	AParent_Animal* childAnimal = nullptr;
 
 	FTransform transform(ChildSpawnPosition);
+	
 	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(ChildType, transform);
+	childAnimal->barrive = true;
 	// 임시 코드
 	/*FTransform spawnTransform(FRotator(), SpawnOrigin);
 	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(AnimalClass, spawnTransform);

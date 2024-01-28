@@ -149,8 +149,8 @@ void ADefaultPlayerController::ResultFlow()
     GetWorldTimerManager().SetTimer(thirdhanle, [this]()
         {
             WidgetInstance[4]->AddToViewport();
-            //FadeOut();
-            ///maincamera->SetActorLocation(FVector(60000.f, 6500.f, -60.f));
+            FadeOut();
+            maincamera->SetActorLocation(FVector(60000.f, 1450.f, -60.f));
         }, 10.f, false);
 }
 
