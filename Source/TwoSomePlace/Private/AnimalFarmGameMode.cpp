@@ -11,10 +11,10 @@
 
 void AAnimalFarmGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
-	Super::InitGame(MapName, Options, ErrorMessage);
-	
 	LoadAnimalDatas();
 	LoadAnimalImageDatas(TEXT("ImageDataTest.csv"));
+
+	Super::InitGame(MapName, Options, ErrorMessage);	
 }
 
 TArray<FAnimalRawData> AAnimalFarmGameMode::GetAnimalRawDatas()
@@ -132,9 +132,9 @@ FAnimalImageData AAnimalFarmGameMode::GetAnimalImageData(FString animalCode)
 void AAnimalFarmGameMode::LoadAnimalDatas()
 {
 	FString csvRawData;
-	
+	FString path = TEXT("C:/") + AnimalDataCSVFileName;
 	const TCHAR* delims = {TEXT(",")};
-	if (FFileHelper::LoadFileToString(csvRawData, *(FPaths::ProjectDir() + AnimalDataCSVFileName)))
+	if (FFileHelper::LoadFileToString(csvRawData, *(path)))
 	{
 		TArray<FString> columns;
 		csvRawData.ParseIntoArrayLines(columns);
@@ -198,8 +198,9 @@ void AAnimalFarmGameMode::LoadAnimalImageDatas(FString fileName)
 {
 	const TArray<FString> partsNames = { TEXT("Body"), TEXT("Head") , TEXT("Leg") , TEXT("Tail") };
 	const TCHAR* delims = { TEXT(",")};
+	FString path = TEXT("C:/") + fileName;
 	FString animalImageRawDatas;
-	if (FFileHelper::LoadFileToString(animalImageRawDatas, *(FPaths::ProjectDir() + fileName)))
+	if (FFileHelper::LoadFileToString(animalImageRawDatas, *(path)))
 	{
 		TArray<FString> columns;
 		int32 columnNum;
@@ -237,7 +238,7 @@ void AAnimalFarmGameMode::LoadAnimalImageDatas(FString fileName)
 			}
 		}
 
-		for (auto&[key, val] : AnimalImageDatas)
+		/*for (auto&[key, val] : AnimalImageDatas)
 		{
 			UKismetSystemLibrary::PrintString(GetWorld(), key);
 			for (auto& [_key, _val] : val.ImageVector2DDatas)
@@ -248,7 +249,7 @@ void AAnimalFarmGameMode::LoadAnimalImageDatas(FString fileName)
 					UKismetSystemLibrary::PrintString(GetWorld(), __val.ToString());
 				}
 			}
-		}
+		}*/
 	}
 	else
 	{
