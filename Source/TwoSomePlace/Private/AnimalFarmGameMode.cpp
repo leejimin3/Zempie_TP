@@ -72,7 +72,9 @@ void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
 AParent_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2)
 {
 	AParent_Animal* childAnimal = nullptr;
-	childAnimal = NewObject<AParent_Animal>();
+
+	FTransform transform(ChildSpawnPosition);
+	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(ChildType, transform);
 	// 임시 코드
 	/*FTransform spawnTransform(FRotator(), SpawnOrigin);
 	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(AnimalClass, spawnTransform);
@@ -120,6 +122,8 @@ AParent_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* paren
 			childAnimal->animalCodes.Push(parent2->animalCodes[i]);
 		}
 	}
+
+	childAnimal->FinishSpawning(transform);
 
 	return childAnimal;
 }

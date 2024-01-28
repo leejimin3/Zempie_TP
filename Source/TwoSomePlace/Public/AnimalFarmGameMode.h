@@ -94,6 +94,12 @@ public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 public:
 
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	UClass* ChildType;
+
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	FVector ChildSpawnPosition;
+
 	/*
 		csv파일 포맷의 Row 갯수로
 		csv파일에 이상이 있는지 검사하는데 사용합니다.
