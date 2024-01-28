@@ -72,6 +72,7 @@ void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
 AParent_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* parent1, const AParent_Animal* parent2)
 {
 	AParent_Animal* childAnimal = nullptr;
+	childAnimal = NewObject<AParent_Animal>();
 	// 임시 코드
 	/*FTransform spawnTransform(FRotator(), SpawnOrigin);
 	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(AnimalClass, spawnTransform);

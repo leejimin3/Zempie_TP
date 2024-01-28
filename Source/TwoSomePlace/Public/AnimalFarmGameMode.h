@@ -57,7 +57,7 @@ public:
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
-	UClass ChildType;
+	UClass* ChildType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AnimalState")
 	FString AnimalCode;
