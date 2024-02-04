@@ -12,7 +12,7 @@
 void AAnimalFarmGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	LoadAnimalDatas();
-	LoadAnimalImageDatas(TEXT("ImageDataTest.csv"));
+	LoadAnimalImageDatas();
 
 	Super::InitGame(MapName, Options, ErrorMessage);	
 }
@@ -33,8 +33,6 @@ void AAnimalFarmGameMode::SpawnAnimals(int animalSpawnCount)
 
 		Animals.Empty();
 	}
-
-	//check(GetWorld() != nullptr);
 
 	TArray<FAnimalRawData> animalDatas = AnimalDatas;
 
@@ -77,12 +75,6 @@ AParent_Animal* AAnimalFarmGameMode::MakeChildAnimal(const AParent_Animal* paren
 	
 	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(ChildType, transform);
 	childAnimal->barrive = true;
-	// 임시 코드
-	/*FTransform spawnTransform(FRotator(), SpawnOrigin);
-	childAnimal = GetWorld()->SpawnActorDeferred<AParent_Animal>(AnimalClass, spawnTransform);
-	childAnimal->Set_LeftDownFarmAria(FarmLeftDown);
-	childAnimal->Set_RightUpFarmAria(FarmRightUp);
-	childAnimal->FinishSpawning(spawnTransform);*/
 
 	// 반복문으로 일괄 처리하기 위한 처리
 	const TArray<float>* parentsPartsInfo[4][2] =
@@ -138,9 +130,12 @@ FAnimalImageData AAnimalFarmGameMode::GetAnimalImageData(FString animalCode)
 void AAnimalFarmGameMode::LoadAnimalDatas()
 {
 	FString csvRawData;
-	FString path = TEXT("C:/") + AnimalDataCSVFileName;
+	FString filePath = FPaths::ProjectContentDir() + TEXT("Datas/") + TEXT("AnimalTypes.csv");
+	UE_LOG(LogTemp, Warning, TEXT("path : %s"), *filePath);
+	UKismetSystemLibrary::PrintString(GetWorld(), filePath);
+
 	const TCHAR* delims = {TEXT(",")};
-	if (FFileHelper::LoadFileToString(csvRawData, *(path)))
+	if (FFileHelper::LoadFileToString(csvRawData, *(filePath)))
 	{
 		TArray<FString> columns;
 		csvRawData.ParseIntoArrayLines(columns);
@@ -181,32 +176,22 @@ void AAnimalFarmGameMode::LoadAnimalDatas()
 	}
 	else
 	{
-		UKismetSystemLibrary::PrintString(GetWorld(), *(AnimalDataCSVFileName + TEXT(" file not found, check config folder")));
-		UKismetSystemLibrary::PrintString(GetWorld(), *(FPaths::ProjectConfigDir() + AnimalDataCSVFileName));
+		UKismetSystemLibrary::PrintString(GetWorld(), *(filePath + TEXT(" file not found")));
 
 		return;
 	}
-
-	//// debugging Code
-	/*for (const FAnimalRawData& rawData : AnimalDatas)
-	{
-		UKismetSystemLibrary::PrintString(GetWorld(), rawData.AnimalCode);
-		UKismetSystemLibrary::PrintString(GetWorld(), rawData.AnimalName);
-
-		for (const float& state : rawData.States)
-		{
-			UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("%f"), state));
-		}
-	}*/
 }
 
-void AAnimalFarmGameMode::LoadAnimalImageDatas(FString fileName)
+void AAnimalFarmGameMode::LoadAnimalImageDatas()
 {
 	const TArray<FString> partsNames = { TEXT("Body"), TEXT("Head") , TEXT("Leg") , TEXT("Tail") };
 	const TCHAR* delims = { TEXT(",")};
-	FString path = TEXT("C:/") + fileName;
+	FString filePath = FPaths::ProjectContentDir() + TEXT("Datas/") + TEXT("AnimalImageDatas.csv");
+	UE_LOG(LogTemp, Warning, TEXT("filePath : %s"), *filePath);
+	UKismetSystemLibrary::PrintString(GetWorld(), filePath);
+
 	FString animalImageRawDatas;
-	if (FFileHelper::LoadFileToString(animalImageRawDatas, *(path)))
+	if (FFileHelper::LoadFileToString(animalImageRawDatas, *(filePath)))
 	{
 		TArray<FString> columns;
 		int32 columnNum;
@@ -243,22 +228,9 @@ void AAnimalFarmGameMode::LoadAnimalImageDatas(FString fileName)
 				AnimalImageDatas.Add(animationImageData.AnimalCode, animationImageData);
 			}
 		}
-
-		/*for (auto&[key, val] : AnimalImageDatas)
-		{
-			UKismetSystemLibrary::PrintString(GetWorld(), key);
-			for (auto& [_key, _val] : val.ImageVector2DDatas)
-			{
-				UKismetSystemLibrary::PrintString(GetWorld(), _key);
-				for (auto& __val : _val.Vector2Ds)
-				{
-					UKismetSystemLibrary::PrintString(GetWorld(), __val.ToString());
-				}
-			}
-		}*/
 	}
 	else
 	{
-		UKismetSystemLibrary::PrintString(GetWorld(), *(FPaths::ProjectConfigDir() + fileName));
+		UKismetSystemLibrary::PrintString(GetWorld(), filePath);
 	}
 }
