@@ -16,7 +16,10 @@ public:
 	TArray<FVector2D> Vector2Ds;
 };
 
-
+/*
+	- 동물의 Parts 정보를 저장하는 구조체
+	- csv파일로 부터 로딩 후, AnimalImageData에 저장합니다.
+*/
 USTRUCT(BlueprintType)
 struct TWOSOMEPLACE_API FAnimalImageData : public FTableRowBase
 {
@@ -94,6 +97,9 @@ public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 public:
 
+	/*
+		자식을 생성할때 사용할 동물 클래스
+	*/
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	UClass* ChildType;
 
@@ -123,6 +129,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	FVector SpawnOrigin;
 
+	/*
+		생성할 동물의 클래스
+	*/
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	UClass* AnimalClass;
 
@@ -151,27 +160,54 @@ public:
 	UPROPERTY(EditAnywhere, Category = "InGame")
 	FVector ParentRightPos;
 
+	/*
+		코드에 해당하는 동물의 이미지 데이터를 반환
+	*/
 	UFUNCTION(BlueprintCallable, Category = "AnimalState | CSV Data")
 	FAnimalImageData GetAnimalImageData(FString animalCode);
 
 protected:
 
+	/*
+		생성된 동물들을 담는 컨테이너
+	*/
 	UPROPERTY(BlueprintReadWrite, Category = "Animal")
 	TArray<AParent_Animal*> Animals;
 
+	/*
+		LoadAnimalDatas()함수를 통해 읽어온 동물 데이터들
+	*/
 	UPROPERTY(VisibleAnywhere, Category = "Animal");
 	TArray<FAnimalRawData> AnimalDatas;
 
-	void LoadAnimalDatas();
-
+	/*
+		이미지 파츠 갯수로, 동물 종류가 담긴 .csv 파일에서 몇개의 파츠 데이터를 읽어올지 지정합니다.
+	*/
 	UPROPERTY(EditAnywhere, Category = "Animal Image")
 	int ImagePartsNum = 4;
 
+	/*
+		동물 이미지 데이터를 동물 코드를 통해 찾을 수 있도록 저장합니다.
+	*/
 	UPROPERTY(VisibleAnywhere, Category = "Animal Image")
 	TMap<FString, FAnimalImageData> AnimalImageDatas;
 
-	void LoadAnimalImageDatas(FString fileName);
-
+	/*
+		현재 생성된 자식 동물
+		MakeChildAnimal() 함수를 통해 생성됩니다.
+	*/
 	UPROPERTY(VisibleAnywhere, Category = "Animal");
 	AParent_Animal* ChildAnimal = nullptr;
+
+	/*
+		csv 파일로부터 동물의 이미지 데이터를 로드합니다.
+	*/
+	UFUNCTION()
+	void LoadAnimalImageDatas();
+
+	/*
+		csv 파일로부터 동물의 종류 데이터를 로드합니다.
+	*/
+	UFUNCTION()
+	void LoadAnimalDatas();
 };
